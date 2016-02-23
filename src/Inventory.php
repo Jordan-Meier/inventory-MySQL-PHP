@@ -25,8 +25,29 @@
             return $this->id;
         }
 
+        function save()
+        {
+            $GLOBALS['DB']->exec("INSERT INTO items (name) VALUES ('{$this->getName()}')");
+            $this->id = $GLOBALS['DB']->lastInsertId();
+        }
+
+        static function getAll()
+        {
+            $returned_inventory = $GLOBALS['DB']->query("SELECT * FROM items;");
+            $inventory = array();
+            foreach($returned_inventory as $inventory) {
+                $name = $inventory['name'];
+                $id = $inventory['id'];
+                $new_inventory = new Inventory($name, $id);
+                array_push($inventory, $new_inventory);
+            }
+            return $inventory;
+        }
+
+        static function deleteAll()
+        {
+            $GLOBALS['DB']->exec("DELETE FROM items;");
+        }
+
     }
-
-
-
 ?>
